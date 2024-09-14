@@ -1,6 +1,6 @@
 
 #include "streznik.h"
-
+#ifdef LINUX
 Objekt *Igra::poisci_objekt_po_id(int id)
 {
     for (int i = 0; i < 15; i++)
@@ -126,7 +126,7 @@ void Streznik::vzdrzuj_povezavo(Odjemalec odjeamlec, Objekt *objekt)
         exit(1);
     }
 }
-
+#endif
 int main(int argc, char *argv[])
 {
     Streznik::zazeni(atoi(argv[1]));

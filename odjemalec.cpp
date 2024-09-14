@@ -73,6 +73,7 @@ Odjemalec::~Odjemalec()
 {
     close(m_vticnik_fd);
 }
+#endif
 int main(int argc, char *argv[])
 {
     Odjemalec odjemalec;
@@ -86,4 +87,3 @@ int main(int argc, char *argv[])
         odjemalec.poslji(sporocilo);
     }
 }
-#endif
