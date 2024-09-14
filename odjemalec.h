@@ -1,5 +1,8 @@
 #ifndef ODJEMALEC_H
 #define ODJEMALEC_H
+
+#ifdef LINUX
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -10,9 +13,11 @@
 #include <netdb.h>
 #include <iostream>
 #include <thread>
+#endif
 class Odjemalec
 {
 public:
+#ifdef LINUX
     void zazeni(std::string naslov, int port);
     void poslji(std::string vsebina);
     std::string prejmi();
@@ -24,5 +29,6 @@ private:
     int m_port;
     sockaddr_in m_naslov_streznika;
     hostent *m_streznik;
+#endif
 };
 #endif

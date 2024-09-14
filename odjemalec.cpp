@@ -1,5 +1,6 @@
 #include "odjemalec.h"
 
+#ifdef LINUX
 void Odjemalec::beri_iz_povezave(Odjemalec *o)
 {
     while (true)
@@ -85,3 +86,4 @@ int main(int argc, char *argv[])
         odjemalec.poslji(sporocilo);
     }
 }
+#endif

@@ -1,6 +1,7 @@
 #ifndef STREZNIK_H
 #define STREZNIK_H
 
+#ifdef LINUX
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,35 +13,42 @@
 #include <iostream>
 #include <thread>
 #include <fcntl.h>
-
+#endif
 //* Razred, ki ima podatke o odjemalcu
 class Odjemalec
 {
 public:
+#ifdef LINUX
     int vticnik_fd;
     sockaddr_in naslov_odjemalca;
     socklen_t velikost_odjemalca;
+#endif
 };
 
 class Objekt
 {
+#ifdef LINUX
 public:
     int objekt_id;
     Odjemalec odjemalec;
+#endif
 };
 
 //* Razred, ki hrani splošne podatke o igri ki jih strežnik potrebuje
 class Igra
 {
+#ifdef LINUX
 public:
     static void nastavi();
     static inline Objekt *objekti[15];
     static inline int st_igralcev;
     static Objekt *poisci_objekt_po_id(int id);
+#endif
 };
 
 class Streznik
 {
+#ifdef LINUX
 public:
     static void zazeni(int st_porta);
 
@@ -50,5 +58,6 @@ private:
     static inline int m_port;
     static void poslusaj();
     static void vzdrzuj_povezavo(Odjemalec odjeamlec, Objekt *objekt);
+#endif
 };
 #endif
