@@ -2,33 +2,43 @@
 #define ODJEMALEC_H
 
 #ifdef LINUX
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <unistd.h>
+#endif
+
+#define WIN
+#ifdef WIN
+#include <WinSock2.h>
+#endif
+
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include <iostream>
 #include <thread>
-#endif
 class Odjemalec
 {
 public:
-#ifdef LINUX
     void zazeni(std::string naslov, int port);
     void poslji(std::string vsebina);
     std::string prejmi();
-    ~Odjemalec();
     static void beri_iz_povezave(Odjemalec *o);
+    ~Odjemalec();
 
 private:
-    int m_vticnik_fd;
     int m_port;
+#ifdef LINUX
+    int m_vticnik_fd;
     sockaddr_in m_naslov_streznika;
     hostent *m_streznik;
+#endif
+#ifdef WIN
+    WSADATA m_WSAData;
+    SOCKET m_streznik;
+    SOCKADDR_IN m_streznik_nalov;
 #endif
 };
 #endif

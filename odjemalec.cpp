@@ -1,8 +1,8 @@
 #include "odjemalec.h"
 
-#ifdef LINUX
 void Odjemalec::beri_iz_povezave(Odjemalec *o)
 {
+#ifdef LINUX
     while (true)
     {
 
@@ -15,10 +15,26 @@ void Odjemalec::beri_iz_povezave(Odjemalec *o)
         }
         std::cout << buffer << "\n";
     }
+#endif
+#ifdef WIN
+    while (true)
+    {
+
+        char buffer[256];
+        (buffer, 256);
+        int n = recv(o->m_streznik, buffer, 255, 0);
+        if (n <= 0)
+        {
+            break;
+        }
+        std::cout << buffer << "\n";
+    }
+#endif
 }
 
 void Odjemalec::zazeni(std::string naslov, int port)
 {
+#ifdef LINUX
     m_port = port;
 
     //* Odpiranje vticnika
@@ -55,29 +71,67 @@ void Odjemalec::zazeni(std::string naslov, int port)
         close(m_vticnik_fd);
         exit(1);
     }
+#endif
+#ifdef WIN
+    m_port = port;
+
+    //* Nstvarjanje vticnika
+    WSAStartup(MAKEWORD(2, 0), &m_WSAData);
+    m_streznik = socket(AF_INET, SOCK_STREAM, 0);
+
+    //* Nastavljanje podatkov o strezniku
+    m_streznik_nalov.sin_addr.s_addr = inet_addr(naslov.c_str());
+    m_streznik_nalov.sin_family = AF_INET;
+    m_streznik_nalov.sin_port = htons(m_port);
+
+    //* Vzpostalvjanje povezava
+    if (connect(m_streznik, (SOCKADDR *)&m_streznik_nalov, sizeof(m_streznik_nalov)))
+    {
+        std::cout << "Napaka pri povezavi na: " << naslov << ":" << m_port << "\n";
+        exit(1);
+    }
+#endif
 }
 void Odjemalec::poslji(std::string vsebina)
 {
+#ifdef LINUX
     int n = write(m_vticnik_fd, vsebina.c_str(), vsebina.size());
     if (n < 0)
         std::cout << "Napaka pri posiljanju!\n";
+#endif
+#ifdef WIN
+    if (send(m_streznik, vsebina.c_str(), vsebina.size(), 0) < 0)
+        std::cout << "Napaka pri posiljanju!\n";
+#endif
 }
 std::string Odjemalec::prejmi()
 {
+#ifdef LINUX
     char buff[256];
     int n = read(m_vticnik_fd, buff, 255);
     return buff;
+#endif
+#ifdef WIN
+    char buff[256];
+    int n = recv(m_streznik, buff, 255, 0);
+    return buff;
+#endif
 }
 
 Odjemalec::~Odjemalec()
 {
+#ifdef LINUX
     close(m_vticnik_fd);
-}
 #endif
+#ifdef WIN
+    closesocket(m_streznik);
+    WSACleanup();
+#endif
+}
 int main(int argc, char *argv[])
 {
     Odjemalec odjemalec;
-    odjemalec.zazeni("localhost", atoi(argv[1]));
+    odjemalec.zazeni("127.0.0.1", atoi(argv[1]));
     std::thread nova_nit(Odjemalec::beri_iz_povezave, &odjemalec);
     nova_nit.detach();
     while (1)

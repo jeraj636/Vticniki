@@ -2,18 +2,23 @@
 #define STREZNIK_H
 
 #ifdef LINUX
-#include <vector>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <iostream>
-#include <thread>
-#include <fcntl.h>
 #endif
+#define WIN
+#ifdef WIN
+#include <WinSock2.h>
+#endif
+
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <vector>
+#include <thread>
+#include <iostream>
+#include <fcntl.h>
 //* Razred, ki ima podatke o odjemalcu
 class Odjemalec
 {
@@ -23,41 +28,47 @@ public:
     sockaddr_in naslov_odjemalca;
     socklen_t velikost_odjemalca;
 #endif
+#ifdef WIN
+    SOCKET odjeamlec;
+    SOCKADDR_IN naslov_odjemalca;
+    int velikost_odjemalca;
+#endif
 };
 
 class Objekt
 {
-#ifdef LINUX
 public:
     int objekt_id;
     Odjemalec odjemalec;
-#endif
 };
 
 //* Razred, ki hrani splošne podatke o igri ki jih strežnik potrebuje
 class Igra
 {
-#ifdef LINUX
 public:
     static void nastavi();
     static inline Objekt *objekti[15];
     static inline int st_igralcev;
     static Objekt *poisci_objekt_po_id(int id);
-#endif
 };
 
 class Streznik
 {
-#ifdef LINUX
 public:
     static void zazeni(int st_porta);
 
 private:
-    static inline int m_vticnik_fd;
-    static inline sockaddr_in m_naslov_streznika;
     static inline int m_port;
     static void poslusaj();
     static void vzdrzuj_povezavo(Odjemalec odjeamlec, Objekt *objekt);
+#ifdef LINUX
+    static inline int m_vticnik_fd;
+    static inline sockaddr_in m_naslov_streznika;
+#endif
+#ifdef WIN
+    static inline WSADATA m_WSAData;
+    static inline SOCKET m_streznik;
+    static inline SOCKADDR_IN m_streznik_naslov;
 #endif
 };
 #endif
