@@ -137,6 +137,7 @@ int main(int argc, char *argv[])
     while (1)
     {
         char buffer[256];
+        memset(buffer, 0, 256);
         fgets(buffer, 255, stdin);
         odjemalec.poslji(buffer);
         if (buffer[0] == 'k')
