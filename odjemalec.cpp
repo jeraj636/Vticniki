@@ -136,8 +136,10 @@ int main(int argc, char *argv[])
     nova_nit.detach();
     while (1)
     {
-        std::string sporocilo;
-        std::cin >> sporocilo;
-        odjemalec.poslji(sporocilo);
+        char buffer[256];
+        fgets(buffer, 255, stdin);
+        odjemalec.poslji(buffer);
+        if (buffer[0] == 'k')
+            break;
     }
 }

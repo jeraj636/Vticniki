@@ -1,7 +1,7 @@
 #ifndef STREZNIK_H
 #define STREZNIK_H
 
-#define LINUX
+#define WIN
 #ifdef LINUX
 #include <unistd.h>
 #include <sys/types.h>

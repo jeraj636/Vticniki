@@ -155,8 +155,6 @@ void Streznik::vzdrzuj_povezavo(Odjemalec odjeamlec, Objekt *objekt)
         bzero(buffer, 256);
         int n = read(odjeamlec.vticnik_fd, buffer, 255);
 
-        std::cout << objekt->objekt_id << "  ::  " << buffer << "\n";
-
         if (buffer[0] == 'p')
         {
             int id_naslovnika = buffer[1] - '0';
@@ -166,10 +164,15 @@ void Streznik::vzdrzuj_povezavo(Odjemalec odjeamlec, Objekt *objekt)
         if (n < 0)
         {
             std::cout << "Napaka pri branju: " << objekt->objekt_id << "\n";
+            break;
         }
         else if (n == 0) //*Povezava se je zaprla
         {
             break;
+        }
+        else
+        {
+            std::cout << objekt->objekt_id << "  ::  " << buffer << "\n";
         }
         if (buffer[0] == 'k') //* POvezava se je zaprla
         {
@@ -202,8 +205,6 @@ void Streznik::vzdrzuj_povezavo(Odjemalec odjeamlec, Objekt *objekt)
         char buffer[256];
         int n = recv(odjeamlec.odjeamlec, buffer, 255, 0);
 
-        std::cout << objekt->objekt_id << "  ::  " << buffer << "\n";
-
         if (buffer[0] == 'p')
         {
             int id_naslovnika = buffer[1] - '0';
@@ -213,12 +214,17 @@ void Streznik::vzdrzuj_povezavo(Odjemalec odjeamlec, Objekt *objekt)
         if (n < 0)
         {
             std::cout << "Napaka pri branju: " << objekt->objekt_id << "\n";
+            break;
         }
         else if (n == 0) //*Povezava se je zaprla
         {
             break;
         }
-        if (buffer[0] == 'k') //* POvezava se je zaprla
+        else
+        {
+            std::cout << objekt->objekt_id << "  ::  " << buffer << "\n";
+        }
+        if (buffer[0] == 'k') //* Povezava se je zaprla
         {
             break;
         }
@@ -236,7 +242,6 @@ void Streznik::vzdrzuj_povezavo(Odjemalec odjeamlec, Objekt *objekt)
     delete objekt;
 
     closesocket(odjeamlec.odjeamlec);
-    std::cout << Igra::st_igralcev << "\n";
     if (Igra::st_igralcev == 0)
     {
         closesocket(Streznik::m_streznik);
