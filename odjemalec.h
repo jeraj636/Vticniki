@@ -1,5 +1,6 @@
 #ifndef ODJEMALEC_H
 #define ODJEMALEC_H
+#define LINUX
 
 #ifdef LINUX
 #include <sys/types.h>
@@ -9,7 +10,6 @@
 #include <unistd.h>
 #endif
 
-#define WIN
 #ifdef WIN
 #include <WinSock2.h>
 #endif

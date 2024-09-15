@@ -131,7 +131,7 @@ Odjemalec::~Odjemalec()
 int main(int argc, char *argv[])
 {
     Odjemalec odjemalec;
-    odjemalec.zazeni("127.0.0.1", atoi(argv[1]));
+    odjemalec.zazeni(argv[1], atoi(argv[2]));
     std::thread nova_nit(Odjemalec::beri_iz_povezave, &odjemalec);
     nova_nit.detach();
     while (1)
